@@ -4,15 +4,15 @@
 
 ## Overview
 
-The User Analysis App is a Streamlit web application that allows users to perform an analysis on user data. Users can upload data files, select specific dates, locations, and SSIDs to see the distinct count of User Names for each combination of the selected values. The results from two files can be merged for combined analysis. It provides an easy and intuitive way to visualize user activity based on the selected filters.
+The User Analysis App is a Streamlit web application that allows users to perform an analysis on user data. Users can upload data files, select specific dates, locations, and SSIDs to see the distinct count of User Names for each combination of the selected values. The results from files are merged for combined analysis. It provides an easy and intuitive way to visualize user activity based on the selected filters.
 
 ## Features
 
 - Upload data files in CSV or Excel format.
 - Interactive data selection widgets for Dates, Location Names, and SSIDs.
-- Dynamic results display as tables and interactive line charts.
+- Dynamic results are displayed as tables and interactive line charts.
 - Option to merge results from two uploaded files.
-- Downloadable results in CSV, Excel, or PDF format.
+- Downloadable results in CSV, or Excel format.
 - Clear all selections and reset the app for a fresh start.
 
 ## How to use
@@ -31,7 +31,6 @@ This app requires the following Python libraries:
 - Pandas
 - Altair
 - Openpyxl
-- XlsxWriter
 
 ## Deployment
 
