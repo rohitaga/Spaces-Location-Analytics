@@ -20,9 +20,8 @@ The User Analysis App is a Streamlit web application that allows users to perfor
 1. Navigate to the Streamlit app URL.
 2. Upload your first and second Excel or CSV files using the upload widgets in the sidebar.
 3. Select the desired filters for analysis.
-4. Click 'Show Table' or 'Show Chart' to visualize the results.
 5. Click 'Download Results' to download the results in a desired format.
-6. Use the 'Clear all' button to reset all selections and start a new analysis.
+6. Use the 'Reset' button to reset all selections and start a new analysis.
 
 ## Requirements
 
