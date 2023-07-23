@@ -104,27 +104,27 @@ you can select specific dates, locations, and SSIDs to see the distinct
 count of User Names for each combination of the selected values. The results from two files can be merged.
 """)
 
-file1 = st.sidebar.file_uploader('Upload your first Excel or CSV file', type=['csv', 'xls', 'xlsx', 'xlsm'], key="file1")
-file2 = st.sidebar.file_uploader('Upload your second Excel or CSV file', type=['csv', 'xls', 'xlsx', 'xlsm'], key="file2")
+uploaded_files = st.sidebar.file_uploader('Upload your Excel or CSV files', type=['csv', 'xls', 'xlsx', 'xlsm'], accept_multiple_files=True, key="uploaded_files")
 
 reset_button = st.sidebar.button("Reset")
 if reset_button:
-    file1, file2 = None, None
+    uploaded_files = []
 
-if file1 is not None and file2 is not None:
-    st.write("## Analysis for File 1")
-    results1 = analyze_file(file1)
+if len(uploaded_files) > 0:
+    for idx, uploaded_file in enumerate(uploaded_files):
+        st.write(f"## Analysis for File {idx + 1}")
+        results = analyze_file(uploaded_file)
 
-    st.write("## Analysis for File 2")
-    results2 = analyze_file(file2)
+        if idx == 0:
+            merged_df = results
+        else:
+            merged_df = pd.concat([merged_df, results]).drop_duplicates()
 
-    if not results1.empty and not results2.empty:
+    if not merged_df.empty:
         st.write("## Merged Results")
-        merged_df = pd.concat([results1, results2]).drop_duplicates()
         visualize_results(merged_df, 'Merged Files')
 
         st.markdown(download_link(merged_df, 'csv', 'merged_results.csv'), unsafe_allow_html=True)
         st.markdown(download_link(merged_df, 'xlsx', 'merged_results.xlsx'), unsafe_allow_html=True)
-
 else:
-    st.write('Please upload two files.')
+    st.write('Please upload one or more files.')
