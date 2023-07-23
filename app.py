@@ -3,8 +3,10 @@ from io import BytesIO
 import pandas as pd
 import streamlit as st
 import altair as alt
+import warnings
 
-# Function to load data
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+
 @st.cache_data
 def load_data(file):
     try:
@@ -21,14 +23,18 @@ def load_data(file):
 def get_unique_values(df, column):
     return sorted(df[column].astype(str).unique())
 
-def get_user_inputs(df, file):
+def get_user_inputs(df, file, use_same_filter=False, common_locations=None, common_ssids=None):
     st.sidebar.subheader(f"Settings for {file.name}")
     all_dates = get_unique_values(df, 'Local Date')
     select_all_dates = st.sidebar.checkbox(f'Select All Dates', value=True, key=f"{file.name}_all_dates")
     local_dates = all_dates if select_all_dates else st.sidebar.multiselect(f'Select Local Date(s)', all_dates, key=f"{file.name}_dates")
 
-    location_names = st.sidebar.multiselect(f'Select Location Name(s)', get_unique_values(df, 'Location Name'), key=f"{file.name}_locations")
-    ssid = st.sidebar.multiselect(f'Select SSID(s)', get_unique_values(df, 'SSID'), key=f"{file.name}_ssid")
+    if use_same_filter:
+        location_names = common_locations
+        ssid = common_ssids
+    else:
+        location_names = st.sidebar.multiselect(f'Select Location Name(s)', get_unique_values(df, 'Location Name'), key=f"{file.name}_locations")
+        ssid = st.sidebar.multiselect(f'Select SSID(s)', get_unique_values(df, 'SSID'), key=f"{file.name}_ssid")
 
     location_type_options = get_unique_values(df, 'Location Type')
     default_location_type = "network" if "network" in location_type_options else location_type_options[0]
@@ -85,11 +91,11 @@ def download_button(df, filetype, filename):
     href = f'<a href="data:file/{filetype};base64,{b64}" download="{filename}">{button_label}</a>'
     return href
 
-def analyze_file(file):
+def analyze_file(file, use_same_filter=False, common_locations=None, common_ssids=None):
     df = load_data(file)
 
     if df is not None:
-        local_dates, location_names, ssid, location_type = get_user_inputs(df, file)
+        local_dates, location_names, ssid, location_type = get_user_inputs(df, file, use_same_filter, common_locations, common_ssids)
         if local_dates and location_names and ssid:
             results_df = calculate_distinct_count(df, local_dates, location_names, ssid, location_type)
             visualize_results(results_df, file)
@@ -111,17 +117,27 @@ reset_button = st.sidebar.button("Reset")
 if reset_button:
     uploaded_files = []
 
+use_same_filter = st.sidebar.checkbox('Use same filter for all files')
+common_locations = None
+common_ssids = None
+
+if use_same_filter and len(uploaded_files) > 0:
+    sample_df = load_data(uploaded_files[0])
+    if sample_df is not None:
+        common_locations = st.sidebar.multiselect('Select Location Name(s) for all files', get_unique_values(sample_df, 'Location Name'), key="common_locations")
+        common_ssids = st.sidebar.multiselect('Select SSID(s) for all files', get_unique_values(sample_df, 'SSID'), key="common_ssids")
+
 if len(uploaded_files) > 0:
     if len(uploaded_files) == 1:
         st.write(f"## Analysis for File 1")
-        results = analyze_file(uploaded_files[0])
+        results = analyze_file(uploaded_files[0], use_same_filter, common_locations, common_ssids)
         if not results.empty:
             st.markdown(download_button(results, 'csv', 'results.csv'), unsafe_allow_html=True)
             st.markdown(download_button(results, 'xlsx', 'results.xlsx'), unsafe_allow_html=True)
     else:
         for idx, uploaded_file in enumerate(uploaded_files):
             st.write(f"## Analysis for File {idx + 1}")
-            results = analyze_file(uploaded_file)
+            results = analyze_file(uploaded_file, use_same_filter, common_locations, common_ssids)
 
             if idx == 0:
                 merged_df = results
