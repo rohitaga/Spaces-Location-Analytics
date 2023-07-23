@@ -70,18 +70,19 @@ def visualize_results(results_df, file):
             tooltip=['Local Date', 'Location Name', 'Distinct Count']
         ).interactive(), use_container_width=True)
 
-def download_link(df, filetype, filename):
+def download_button(df, filetype, filename):
     if filetype == "csv":
         data = df.to_csv(index=False)
         b64 = base64.b64encode(data.encode()).decode()  # some strings <-> bytes conversions necessary here
-        href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download {filename} as CSV</a>'
+        button_label = f"Download {filename} as CSV"
     elif filetype == "xlsx":
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name='Sheet1', index=False)
         xlsx_data = output.getvalue()
         b64 = base64.b64encode(xlsx_data).decode()  # some strings <-> bytes conversions necessary here
-        href = f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">Download {filename} as XLSX</a>'
+        button_label = f"Download {filename} as XLSX"
+    href = f'<a href="data:file/{filetype};base64,{b64}" download="{filename}">{button_label}</a>'
     return href
 
 def analyze_file(file):
@@ -111,20 +112,27 @@ if reset_button:
     uploaded_files = []
 
 if len(uploaded_files) > 0:
-    for idx, uploaded_file in enumerate(uploaded_files):
-        st.write(f"## Analysis for File {idx + 1}")
-        results = analyze_file(uploaded_file)
+    if len(uploaded_files) == 1:
+        st.write(f"## Analysis for File 1")
+        results = analyze_file(uploaded_files[0])
+        if not results.empty:
+            st.markdown(download_button(results, 'csv', 'results.csv'), unsafe_allow_html=True)
+            st.markdown(download_button(results, 'xlsx', 'results.xlsx'), unsafe_allow_html=True)
+    else:
+        for idx, uploaded_file in enumerate(uploaded_files):
+            st.write(f"## Analysis for File {idx + 1}")
+            results = analyze_file(uploaded_file)
 
-        if idx == 0:
-            merged_df = results
-        else:
-            merged_df = pd.concat([merged_df, results]).drop_duplicates()
+            if idx == 0:
+                merged_df = results
+            else:
+                merged_df = pd.concat([merged_df, results]).drop_duplicates()
 
-    if not merged_df.empty:
-        st.write("## Merged Results")
-        visualize_results(merged_df, 'Merged Files')
+        if not merged_df.empty:
+            st.write("## Merged Results")
+            visualize_results(merged_df, 'Merged Files')
 
-        st.markdown(download_link(merged_df, 'csv', 'merged_results.csv'), unsafe_allow_html=True)
-        st.markdown(download_link(merged_df, 'xlsx', 'merged_results.xlsx'), unsafe_allow_html=True)
+            st.markdown(download_button(merged_df, 'csv', 'merged_results.csv'), unsafe_allow_html=True)
+            st.markdown(download_button(merged_df, 'xlsx', 'merged_results.xlsx'), unsafe_allow_html=True)
 else:
     st.write('Please upload one or more files.')
