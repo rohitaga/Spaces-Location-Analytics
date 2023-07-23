@@ -11,14 +11,14 @@ The User Analysis App is a Streamlit web application that allows users to perfor
 - Upload data files in CSV or Excel format.
 - Interactive data selection widgets for Dates, Location Names, and SSIDs.
 - Dynamic results are displayed as tables and interactive line charts.
-- Option to merge results from two uploaded files.
+- Option to merge results from two or more uploaded files.
 - Downloadable results in CSV, or Excel format.
 - Clear all selections and reset the app for a fresh start.
 
 ## How to use
 
 1. Navigate to the Streamlit app URL.
-2. Upload your first and second Excel or CSV files using the upload widgets in the sidebar.
+2. Upload multiple Excel or CSV files using the upload widgets in the sidebar.
 3. Select the desired filters for analysis.
 5. Click 'Download Results' to download the results in a desired format.
 6. Use the 'Reset' button to reset all selections and start a new analysis.
