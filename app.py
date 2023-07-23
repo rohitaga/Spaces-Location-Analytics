@@ -103,7 +103,7 @@ def analyze_file(file, use_same_filter=False, common_locations=None, common_ssid
 
     return pd.DataFrame()
 
-st.sidebar.image("location-analytics.png")  # Add an image to make the interface more appealing
+st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
 st.title('User Analysis App')
 st.write("""
 This app allows you to perform an analysis on user data. After uploading your data files, 
@@ -117,7 +117,7 @@ reset_button = st.sidebar.button("Reset")
 if reset_button:
     uploaded_files = []
 
-use_same_filter = st.sidebar.checkbox('Use same filter for all files')
+use_same_filter = st.sidebar.checkbox('Apply the same filter to all files for Location Name and SSID')
 common_locations = None
 common_ssids = None
 
