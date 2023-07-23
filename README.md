@@ -1,6 +1,6 @@
 # User Analysis App
 
-![alt text](location-analytics.png)
+![alt text](location-analytics1.jpeg)
 
 ## Overview
 
