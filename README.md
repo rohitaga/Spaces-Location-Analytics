@@ -36,5 +36,5 @@ This app requires the following Python libraries:
 
 ## Deployment
 
-This app is deployed on Streamlit Cloud. For local deployment, use the following command:
+This app is deployed on Streamlit Cloud. For local deployment
 
