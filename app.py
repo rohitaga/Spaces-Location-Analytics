@@ -7,6 +7,16 @@ import warnings
 
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 
+# Set page title and description
+
+st.set_page_config(page_title="Data Analysis App", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
+st.title("Data Analysis App")
+st.write("""
+This app allows you to perform an analysis on user data. After uploading your data files, 
+you can select specific dates, locations, and SSIDs to see the distinct 
+count of User Names for each combination of the selected values. The results from two files can be merged.
+""")
+
 @st.cache_data
 def load_data(file):
     try:
@@ -104,12 +114,6 @@ def analyze_file(file, use_same_filter=False, common_locations=None, common_ssid
     return pd.DataFrame()
 
 st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
-st.title('User Analysis App')
-st.write("""
-This app allows you to perform an analysis on user data. After uploading your data files, 
-you can select specific dates, locations, and SSIDs to see the distinct 
-count of User Names for each combination of the selected values. The results from two files can be merged.
-""")
 
 uploaded_files = st.sidebar.file_uploader('Upload your Excel or CSV files', type=['csv', 'xls', 'xlsx', 'xlsm'], accept_multiple_files=True, key="uploaded_files")
 
@@ -152,3 +156,18 @@ if len(uploaded_files) > 0:
             st.markdown(download_button(merged_df, 'xlsx', 'merged_results.xlsx'), unsafe_allow_html=True)
 else:
     st.write('Please upload one or more files.')
+
+# Display app gallery
+
+st.write("## App Gallery")
+st.write("Check out some of our favorite apps created by Streamlit users and hosted on Streamlit Community Cloud.")
+st.write("Try them out, browse their source code, share with the world, and get inspired for your own projects 🤩")
+st.write("Want to build your own? Get started today!")
+st.write("[Streamlit App Gallery](https://streamlit.io/gallery)")
+
+# Display API reference
+
+st.write("## API Reference")
+st.write("Streamlit makes it easy for you to visualize, mutate, and share data. The API reference is organized by activity type, like displaying data or optimizing performance.")
+st.write("Each section includes methods associated with the activity type, including examples. Browse our API below and click to learn more about any of our available commands! 🎈")
+st.write("[Streamlit API Reference](https://docs.streamlit.io/library/api-reference)")
