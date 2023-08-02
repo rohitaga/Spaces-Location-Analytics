@@ -4,7 +4,11 @@ def show():
     st.title("Trust and Security")
 
     st.write("""
-    Streamlit is a framework that turns Python scripts into interactive apps, giving data scientists the ability to quickly create data- and model-based apps for the entire company. Please refer to the following link for more information: https://docs.streamlit.io/streamlit-community-cloud/trust-and-security
+    Streamlit is a framework that turns Python scripts into interactive apps, giving data scientists the ability to quickly create data- and model-based apps for the entire company.
+    """)
+
+    st.write("""
+    Please refer to the following link for more information about Streamlit Trust and Security: https://docs.streamlit.io/streamlit-community-cloud/trust-and-security
     """)
 
     st.write("""
