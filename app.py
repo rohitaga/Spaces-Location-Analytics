@@ -4,18 +4,45 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 import warnings
+from pages import ToolExploration, TrustandSecurity, Tutorial, APIPage
 
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 
-# Set page title and description
 
+# Set the page config once at the start of your main script
 st.set_page_config(page_title="Data Analysis App", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
-st.title("Data Analysis App")
-st.write("""
-This app allows you to perform an analysis on user data. After uploading your data files, 
-you can select specific dates, locations, and SSIDs to see the distinct 
-count of User Names for each combination of the selected values. The results from two files can be merged.
-""")
+
+st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
+
+# Add a radio button group to the sidebar for navigation
+page = st.sidebar.radio("Navigation", ["Home", "Tutorial", "API Page", "Tool Exploration", "Trust and Security"])
+
+if page == "Home":
+    st.title("Data Analysis App")
+    st.write("""
+    This app allows you to perform an analysis on user data. After uploading your data files, 
+    you can select specific dates, locations, and SSIDs to see the distinct 
+    count of User Names for each combination of the selected values. The results from two files can be merged.
+    """)
+    st.write("""
+    Streamlit makes it easy for you to visualize, mutate, and share data. The API reference is organized by activity type, like displaying data or optimizing performance.
+    """)  # The closing triple-quote was missing here
+    st.write("""
+    Please upload one or more files.
+    """)
+
+elif page == "Tutorial":
+    Tutorial.show()
+
+elif page == "API Page":
+    APIPage.show()
+
+elif page == "Tool Exploration":
+    ToolExploration.show()
+
+elif page == "Trust and Security":
+    TrustandSecurity.show()
+
 
 @st.cache_data
 def load_data(file):
@@ -80,7 +107,7 @@ def visualize_results(results_df, file):
     show_chart = st.checkbox("Show Chart", value=True, key=f"{file_name}_show_chart")
     if show_chart:
         st.altair_chart(alt.Chart(results_df).mark_line().encode(
-            x='Local Date:T',
+            x='Local Date',
             y='Distinct Count:Q',
             color='Location Name:N',
             tooltip=['Local Date', 'Location Name', 'Distinct Count']
@@ -113,7 +140,6 @@ def analyze_file(file, use_same_filter=False, common_locations=None, common_ssid
 
     return pd.DataFrame()
 
-st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
 
 uploaded_files = st.sidebar.file_uploader('Upload your Excel or CSV files', type=['csv', 'xls', 'xlsx', 'xlsm'], accept_multiple_files=True, key="uploaded_files")
 
@@ -154,20 +180,3 @@ if len(uploaded_files) > 0:
 
             st.markdown(download_button(merged_df, 'csv', 'merged_results.csv'), unsafe_allow_html=True)
             st.markdown(download_button(merged_df, 'xlsx', 'merged_results.xlsx'), unsafe_allow_html=True)
-else:
-    st.write('Please upload one or more files.')
-
-# Display app gallery
-
-st.write("## App Gallery")
-st.write("Check out some of our favorite apps created by Streamlit users and hosted on Streamlit Community Cloud.")
-st.write("Try them out, browse their source code, share with the world, and get inspired for your own projects 🤩")
-st.write("Want to build your own? Get started today!")
-st.write("[Streamlit App Gallery](https://streamlit.io/gallery)")
-
-# Display API reference
-
-st.write("## API Reference")
-st.write("Streamlit makes it easy for you to visualize, mutate, and share data. The API reference is organized by activity type, like displaying data or optimizing performance.")
-st.write("Each section includes methods associated with the activity type, including examples. Browse our API below and click to learn more about any of our available commands! 🎈")
-st.write("[Streamlit API Reference](https://docs.streamlit.io/library/api-reference)")
