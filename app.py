@@ -2,6 +2,7 @@ import base64
 from io import BytesIO
 import pandas as pd
 import streamlit as st
+from streamlit_option_menu import option_menu
 import altair as alt
 import warnings
 from pages import ToolExploration, TrustandSecurity, Tutorial, APIPage
@@ -13,34 +14,47 @@ st.set_page_config(page_title="Data Analysis App", page_icon=":bar_chart:", layo
 
 st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
 
-# Add a radio button group to the sidebar for navigation
-page = st.sidebar.radio("Navigation", ["Home", "Tutorial", "API Page", "Tool Exploration", "Trust and Security"])
+selected = option_menu(
+          menu_title=None,  # required
+          options=["Home", "Tutorial", "API Page", "Tool Exploration", "Trust and Security"],
+          icons=["house", "book", "code", "tools", "envelope"],
+          menu_icon="cast",  # optional
+          default_index=0,  # optional
+          orientation="horizontal",
+     )
 
-if page == "Home":
+if selected == "Home":
     st.title("Data Analysis App")
+
     st.write("""
     This app allows you to perform an analysis on user data. After uploading your data files, 
     you can select specific dates, locations, and SSIDs to see the distinct 
     count of User Names for each combination of the selected values. The results from two files can be merged.
     """)
+
     st.write("""
     Streamlit makes it easy for you to visualize, mutate, and share data. The API reference is organized by activity type, like displaying data or optimizing performance.
-    """)  # The closing triple-quote was missing here
+    """)
+
     st.write("""
     Please upload one or more files.
     """)
 
-elif page == "Tutorial":
+elif selected == "Tutorial":
     Tutorial.show()
+    # Rest of the code for the "Tutorial" page
 
-elif page == "API Page":
+elif selected == "API Page":
     APIPage.show()
+    # Rest of the code for the "API Page" page
 
-elif page == "Tool Exploration":
+elif selected == "Tool Exploration":
     ToolExploration.show()
+    # Rest of the code for the "Tool Exploration" page
 
-elif page == "Trust and Security":
+elif selected == "Trust and Security":
     TrustandSecurity.show()
+    # Rest of the code for the "Trust and Security" page
 
 @st.cache_data
 def load_data(file):
