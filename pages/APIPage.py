@@ -19,3 +19,4 @@ def show():
     Want to build your own? Get started today!
     """)
     st.write("[Streamlit App Gallery](https://streamlit.io/gallery)")
+    
