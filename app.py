@@ -12,7 +12,7 @@ from PIL import Image
 warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 
 # Set the page config once at the start of your main script
-st.set_page_config(page_title="Data Analysis App", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="UserCount", page_icon=":bar_chart:", layout="wide", initial_sidebar_state="expanded")
 
 # Remove the Streamlit generated page components on the sidebar
 no_sidebar_style = """

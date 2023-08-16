@@ -8,7 +8,7 @@ from io import BytesIO
 from streamlit_extras.grid import grid
 
 def show():
-    st.title("Data Analysis App")
+    st.title("UserCount")
 
     st.write("""
     This app allows you to perform an analysis on user data. After uploading your data files, 
