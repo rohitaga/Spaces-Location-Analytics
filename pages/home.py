@@ -23,8 +23,8 @@ def show():
     uploaded_files = my_grid.file_uploader('Please upload one or more files.', type=['csv', 'xls', 'xlsx', 'xlsm'], accept_multiple_files=True, key="uploaded_files")
     reset_button = my_grid.button("Reset Files", key="reset_button")
 
-    if reset_button:
-        uploaded_files = []
+                                                    if reset_button:
+                                                        uploaded_files = []
 
     use_same_filter = st.sidebar.checkbox('Apply the same filter to all files for Location Name and SSID')
     common_locations = None
@@ -45,11 +45,11 @@ def show():
                 st.download_button(label="Download Results as CSV", data=results.to_csv(index=False), file_name="results.csv", mime="text/csv")
                 
                 # Download Results as XLSX
-                output = BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    results.to_excel(writer, sheet_name='Sheet1', index=False)
-                xlsx_data = output.getvalue()
-                st.download_button(label="Download Results as XLSX", data=xlsx_data, file_name="results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                # output = BytesIO()
+                # with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    # results.to_excel(writer, sheet_name='Sheet1', index=False)
+                # xlsx_data = output.getvalue()
+                # st.download_button(label="Download Results as XLSX", data=xlsx_data, file_name="results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         else:
             for idx, uploaded_file in enumerate(uploaded_files):
                 st.write(f"## Analysis for File {idx + 1}")
@@ -67,11 +67,11 @@ def show():
                 st.download_button(label="Download Merged Results as CSV", data=merged_df.to_csv(index=False), file_name="merged_results.csv", mime="text/csv")
                 
                 # Download Merged Results as XLSX
-                output = BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    merged_df.to_excel(writer, sheet_name='Sheet1', index=False)
-                xlsx_data = output.getvalue()
-                st.download_button(label="Download Merged Results as XLSX", data=xlsx_data, file_name="merged_results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                # output = BytesIO()
+                # with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    # merged_df.to_excel(writer, sheet_name='Sheet1', index=False)
+                # xlsx_data = output.getvalue()
+                # st.download_button(label="Download Merged Results as XLSX", data=xlsx_data, file_name="merged_results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 @st.cache_data
 def load_data(file):
