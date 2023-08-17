@@ -36,42 +36,22 @@ def show():
             common_locations = st.sidebar.multiselect('Select Location Name(s) for all files', get_unique_values(sample_df, 'Location Name'), key="common_locations")
             common_ssids = st.sidebar.multiselect('Select SSID(s) for all files', get_unique_values(sample_df, 'SSID'), key="common_ssids")
 
-    if len(uploaded_files) > 0:
-        if len(uploaded_files) == 1:
-            st.write(f"## Analysis for File 1")
-            results = analyze_file(uploaded_files[0], use_same_filter, common_locations, common_ssids)
-            if not results.empty:
-                # Download Results as CSV
-                st.download_button(label="Download Results as CSV", data=results.to_csv(index=False), file_name="results.csv", mime="text/csv")
-                
-                # Download Results as XLSX
-                output = BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    results.to_excel(writer, sheet_name='Sheet1', index=False)
-                xlsx_data = output.getvalue()
-                st.download_button(label="Download Results as XLSX", data=xlsx_data, file_name="results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        else:
-            for idx, uploaded_file in enumerate(uploaded_files):
-                st.write(f"## Analysis for File {idx + 1}")
-                results = analyze_file(uploaded_file, use_same_filter, common_locations, common_ssids)
+    # Define download_button
+    if uploaded_files:
+        for idx, uploaded_file in enumerate(uploaded_files):
+            st.write(f"## Analysis for File {idx + 1}")
+            results = analyze_file(uploaded_file, use_same_filter, common_locations, common_ssids)
+            st.download_button(label="Download Results as CSV", data=results.to_csv(index=False), file_name="results.csv", mime="text/csv", key=f"download_csv_{idx}")
 
-                if idx == 0:
-                    merged_df = results
-                else:
-                    merged_df = pd.concat([merged_df, results]).drop_duplicates()
+            if idx == 0 and len(uploaded_files) > 1:
+                merged_df = results
+            elif len(uploaded_files) > 1:
+                merged_df = pd.concat([merged_df, results]).drop_duplicates()
 
-            if not merged_df.empty:
-                st.write("## Merged Results")
-                visualize_results(merged_df, 'Merged Files')
-                # Download Merged Results as CSV
-                st.download_button(label="Download Merged Results as CSV", data=merged_df.to_csv(index=False), file_name="merged_results.csv", mime="text/csv")
-                
-                # Download Merged Results as XLSX
-                output = BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    merged_df.to_excel(writer, sheet_name='Sheet1', index=False)
-                xlsx_data = output.getvalue()
-                st.download_button(label="Download Merged Results as XLSX", data=xlsx_data, file_name="merged_results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        if len(uploaded_files) > 1 and not merged_df.empty:
+            st.write("## Merged Results")
+            visualize_results(merged_df, 'Merged Files')
+            st.download_button(label="Download Merged Results as CSV", data=merged_df.to_csv(index=False), file_name="merged_results.csv", mime="text/csv", key="download_merged_csv")
 
 @st.cache_data
 def load_data(file):
@@ -130,18 +110,43 @@ def visualize_results(results_df, file):
     file_name = file if isinstance(file, str) else file.name
     st.subheader(f"Results for {file_name}:")
 
+    # Create a unique key using the file name
+    unique_key = f"locations_{hash(file_name)}"
+
+    # Filter options with unique key
+    locations = st.multiselect('Select Locations', options=results_df['Location Name'].unique(), key=unique_key)
+    if locations:
+        results_df = results_df[results_df['Location Name'].isin(locations)]
+
     col1, col2 = st.columns([1, 1])  # Create two columns with equal width
 
     col1.subheader("Table")
-    col1.write(results_df)
+    col1.dataframe(results_df)  # Interactive table display
 
     col2.subheader("Chart")
-    chart = alt.Chart(results_df).mark_line().encode(
-        x='Local Date',
-        y='Distinct Count:Q',
+
+    # Define chart title and axis labels
+    chart_title = "Distinct Count of User Names Over Time"
+    x_axis_label = "Local Date"
+    y_axis_label = "Distinct Count of User Names"
+
+    # Define tooltip with more human-readable labels
+    tooltip = [
+        alt.Tooltip('Local Date', title='Date'),
+        alt.Tooltip('Location Name', title='Location'),
+        alt.Tooltip('Distinct Count', title='Distinct Count of Users')
+    ]
+
+    # Create the chart with additional customization
+    chart = alt.Chart(results_df).mark_line(size=3).encode(
+        x=alt.X('Local Date', title=x_axis_label),
+        y=alt.Y('Distinct Count:Q', title=y_axis_label),
         color='Location Name:N',
-        tooltip=['Local Date', 'Location Name', 'Distinct Count']
+        tooltip=tooltip
+    ).properties(
+        title=chart_title
     ).interactive()
+
     col2.altair_chart(chart, use_container_width=True)
 
 def analyze_file(file, use_same_filter=False, common_locations=None, common_ssids=None):
