@@ -23,8 +23,8 @@ def show():
     uploaded_files = my_grid.file_uploader('Please upload one or more files.', type=['csv', 'xls', 'xlsx', 'xlsm'], accept_multiple_files=True, key="uploaded_files")
     reset_button = my_grid.button("Reset Files", key="reset_button")
 
-                                                    if reset_button:
-                                                        uploaded_files = []
+    if reset_button:
+        uploaded_files = []
 
     use_same_filter = st.sidebar.checkbox('Apply the same filter to all files for Location Name and SSID')
     common_locations = None
