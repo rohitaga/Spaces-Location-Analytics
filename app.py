@@ -22,8 +22,6 @@ no_sidebar_style = """
 """
 st.markdown(no_sidebar_style, unsafe_allow_html=True)
 
-# st.sidebar.image("location-analytics1.jpeg")  # Add an image to make the interface more appealing
-
 selected = option_menu(
           menu_title=None,  # required
           options=["Home", "Tutorial", "API Page", "Tool Exploration", "Trust and Security"],
@@ -36,29 +34,29 @@ selected = option_menu(
 # Navigation
 if selected == "Home":
     image = Image.open('location-analytics1.jpeg')
-    st.sidebar.image(image, caption='Location Analytics')
+    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     show_home()
     # Rest of the code for the "Home" page
 
 elif selected == "Tutorial":
     image = Image.open('location-analytics2.jpeg')
-    st.sidebar.image(image, caption='Location Analytics')
+    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     Tutorial.show()
     # Rest of the code for the "Tutorial" page
 
 elif selected == "API Page":
     image = Image.open('location-analytics3.png')
-    st.sidebar.image(image, caption='Location Analytics')
+    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     APIPage.show()
     # Rest of the code for the "API Page" page
 
 elif selected == "Tool Exploration":
     image = Image.open('location-analytics4.jpeg')
-    st.sidebar.image(image, caption='Location Analytics')
+    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     ToolExploration.show()
     # Rest of the code for the "Tool Exploration" page
 
 elif selected == "Trust and Security":
     image = Image.open('location-analytics5.jpeg')
-    st.sidebar.image(image, caption='Location Analytics')
+    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     TrustandSecurity.show()
