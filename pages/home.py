@@ -11,7 +11,7 @@ def show():
     st.title("UserCount")
 
     st.write("""
-    This app allows you to perform an analysis on user data. After uploading your data files, 
+    This app allows you to perform an analysis on user count gathered from Cisco Spaces. After uploading your data files, 
     you can select specific dates, locations, and SSIDs to see the distinct 
     count of User Names for each combination of the selected values. The results from two files can be merged.
     """)

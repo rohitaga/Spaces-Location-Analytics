@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import altair as alt
 import warnings
-from pages import ToolExploration, TrustandSecurity, Tutorial, APIPage
+from pages import TrustandSecurity, Tutorial, APIPage
 from pages.home import show as show_home
 from PIL import Image
 
@@ -24,8 +24,8 @@ st.markdown(no_sidebar_style, unsafe_allow_html=True)
 
 selected = option_menu(
           menu_title=None,  # required
-          options=["Home", "Tutorial", "API Page", "Tool Exploration", "Trust and Security"],
-          icons=["house", "book", "code", "tools", "envelope"],
+          options=["Home", "Tutorial", "API Page", "Trust and Security"],
+          icons=["house", "book", "code", "envelope"],
           menu_icon="cast",  # optional
           default_index=0,  # optional
           orientation="horizontal",
@@ -49,12 +49,6 @@ elif selected == "API Page":
     st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
     APIPage.show()
     # Rest of the code for the "API Page" page
-
-elif selected == "Tool Exploration":
-    image = Image.open('location-analytics4.jpeg')
-    st.sidebar.image(image, use_column_width="always", caption='Location Analytics')
-    ToolExploration.show()
-    # Rest of the code for the "Tool Exploration" page
 
 elif selected == "Trust and Security":
     image = Image.open('location-analytics5.jpeg')
